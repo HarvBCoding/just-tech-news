@@ -3,12 +3,14 @@ const sequelize = require('../../config/connection');
 
 // user is required b/c when getting information about a post,
 // information from the user must also be retrieved
-const { Post, User, Vote } = require('../../models');
+const { Post, User, Vote, Comment } = require('../../models');
 
 // get all posts
 router.get('/', (req, res) => {
     console.log('======================');
     Post.findAll({
+        // the order property is assigned a mested array that orders by the created_at column is descending order
+        order: [['created_at', 'DESC']],
         attributes: [
             'id', 
             'post_url', 
@@ -19,10 +21,17 @@ router.get('/', (req, res) => {
                 'vote_count'
             ]
         ],
-        // the order property is assigned a mested array that orders by the created_at column is descending order
-        order: [['created_at', 'DESC']],
         // include property is an array of objects; to define this object, reference the model & attributes(column name)
         include: [
+            {
+                model: Comment,
+                attributes: ['id', 'comment_text', 'post_id', 'user_id', 'created_at'],
+                include: {
+                    // so that the username can be attached to the comment
+                    model: User,
+                    attributes: ['username']
+                }
+            },
             {
                 model: User,
                 attributes: ['username']
@@ -54,6 +63,14 @@ router.get('/:id', (req, res) => {
             ]
         ],
         include: [
+            {
+                model: Comment,
+                attributes: ['id', 'comment_text', 'post_id', 'user_id', 'created_at'],
+                include: {
+                    model: User,
+                    attributes: ['username']
+                }
+            },
             {
                 model: User,
                 attributes: ['username']
