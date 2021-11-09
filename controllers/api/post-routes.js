@@ -111,7 +111,7 @@ router.put('/upvote', (req, res) => {
     Post.upvote(req.body, { Vote })
       .then(updatedPostData => res.json(updatedPostData))
       .catch(err => {
-          console.lof(err);
+          console.log(err);
           res.status(400).json(err);
       });
 });
