@@ -135,7 +135,7 @@ router.post('/logout', (req, res) => {
 });
 
 // PUT /api/users/1
-router.put('/:id', (req, res) => {
+router.put('/:id', withAuth, (req, res) => {
     // expects {username: 'value', email: 'value@val', password: 'pw'}
 
     // .update() method combines the parameters for creating data and looking up data
